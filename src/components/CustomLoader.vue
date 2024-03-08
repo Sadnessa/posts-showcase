@@ -1,15 +1,23 @@
 <template>
-  <div class="loader"></div>
+  <div class="loader" v-if="showLoader"></div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 const props = defineProps({
   color: {
     type: String,
     default: "#fff",
   },
+});
+
+const showLoader = ref(false);
+
+onMounted(() => {
+  setTimeout(() => {
+    showLoader.value = true;
+  }, 1000);
 });
 
 const loaderColor = computed(() => {

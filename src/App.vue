@@ -3,15 +3,26 @@
     <div
       class="sm:container flex items-center h-screen flex-col grow gap-4 p-5 pb-0"
     >
-      <CustomInput v-model="searchValue" placeholder="Find by author">
+      <CustomInput
+        v-model="searchValue"
+        placeholder="Find by author"
+        @action-button-click="resetField"
+      >
         <template #icon-indicator>
           <Icon class="text-lg text-slate-500" icon="mingcute:search-3-line" />
         </template>
+        <template #icon-action-button>
+          <Icon
+            class="text-xl text-neutral-900 cursor-pointer"
+            icon="mingcute:close-line"
+          />
+        </template>
       </CustomInput>
-      <CustomLoader v-if="!postsToShow.length" />
+      <CustomLoader v-if="isLoading" />
+
       <section
-        v-else
         class="publicationsList grow grid grid-cols-1 2xl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-5 overflow-auto basis-0 pb-5 scroll-smooth px-3 -mx-3"
+        v-else-if="postsToShow.length"
       >
         <PublicationCard
           v-for="post in postsToShow"
@@ -21,6 +32,15 @@
           :author="post.userName"
         />
       </section>
+      <div class="emptyList flex flex-col items-center" v-else>
+        <p>Author not found. :c</p>
+        <span
+          class="cursor-pointer text-sky-500 font-semibold"
+          @click="resetField"
+        >
+          Reset field?
+        </span>
+      </div>
     </div>
   </main>
 </template>
@@ -55,8 +75,8 @@ interface User {
   address: object;
 }
 
+const isLoading = ref(true);
 const searchValue = ref("");
-
 const postsList = ref<Post[]>([]);
 
 const postsToShow = computed(() => {
@@ -71,6 +91,10 @@ const postsToShow = computed(() => {
   }
 });
 
+const resetField = () => {
+  searchValue.value = "";
+};
+
 const initPage = async () => {
   const [posts, users] = await Promise.all([getPosts(), getUsers()]);
   postsList.value = posts.map((post: Post) => {
@@ -79,6 +103,7 @@ const initPage = async () => {
       userName: users.find((user: User) => user.id === post.userId)!.name,
     };
   });
+  isLoading.value = false;
 };
 
 initPage();
