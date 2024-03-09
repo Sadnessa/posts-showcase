@@ -1,5 +1,5 @@
 <template>
-  <div class="loader" v-if="showLoader"></div>
+  <div class="loader" v-show="showLoader"></div>
 </template>
 
 <script setup lang="ts">
@@ -10,18 +10,27 @@ const props = defineProps({
     type: String,
     default: "#fff",
   },
-});
 
-const showLoader = ref(false);
+  showDelay: {
+    type: Number,
+    default: 300,
+  },
+});
 
 onMounted(() => {
   setTimeout(() => {
     showLoader.value = true;
-  }, 1000);
+  }, delay.value);
 });
+
+const showLoader = ref(false);
 
 const loaderColor = computed(() => {
   return props.color;
+});
+
+const delay = computed(() => {
+  return props.showDelay;
 });
 </script>
 

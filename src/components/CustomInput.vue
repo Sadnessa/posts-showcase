@@ -14,9 +14,8 @@
       :placeholder="props.placeholder"
     />
     <div
-      class="customInput__actionButton flex items-center justify-center w-9 hover:bg-slate-400/20"
+      class="customInput__actionButton flex items-center justify-center w-9"
       v-if="$slots['icon-action-button']"
-      @click="$emit('actionButtonClick')"
     >
       <slot name="icon-action-button" />
     </div>
@@ -25,8 +24,6 @@
 
 <script setup lang="ts">
 const inputValue = defineModel();
-
-const emit = defineEmits(["actionButtonClick"]);
 
 const props = defineProps<{ placeholder?: string }>();
 </script>
